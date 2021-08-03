@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import random
 import numpy as np
 import math
+import sys
 import click
 
 # user input – click
@@ -146,9 +147,16 @@ def walker(x, y, steps, dif_start, step_size=1, direction_set=("NORTH", "SOUTH",
 
 
 def check_landscape(landscape, position):
+    """
+    Checks if next position of walker intersects given landscape
+    :param landscape:
+    :param position:
+    :return:
+    """
     if landscape[position[0], position[1]] != 1:
         return True
     return False
+
 
 def landscape_walker(total_steps, landscape, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST")):
     """
@@ -161,7 +169,7 @@ def landscape_walker(total_steps, landscape, step_size=1, direction_set=("NORTH"
     :return: x, y numpy arrays
     """
  
-    #TODO: ADJUST IT
+    # TODO: ADJUST IT
     curr_pos = [33, 33]
     future_pos = [33, 33]
 
@@ -234,12 +242,26 @@ def some_other_walker():
 
 #TODO: implement multiple walkers for landscape walkers (and other possible walkers)
 def multiple_walkers(x, y, steps, walkers, dif_start):
+    """
+    Generates paths for multiple walkers
+    :param x: np.array of x-coordinates (input: zeros)
+    :param y: np.array of y-coordinates (input: zeros)
+    :param steps: number of steps of individual walker
+    :param walkers: number of walkers
+    :param dif_start: bool value – if True, walkers start from different position
+                                   if False, walkers start from the same position
+    :return: lists of x and y coordinates
+    """
+    # create empty lists
     xlist = []
     ylist = []
     for w in range(walkers):
+        # call walker function to generate array of x and y coordinates of one walker
         x_axis, y_axis = walker(x, y, steps, dif_start)
+        # append to list
         xlist.append(x_axis)
         ylist.append(y_axis)
+        # set input arrays back to zeros
         x = np.zeros(steps)
         y = np.zeros(steps)
     return xlist, ylist
@@ -253,15 +275,18 @@ def plot_walkers(steps, walkers, xlist, ylist):
     :param walkers: Number of walkers (needed for a figure title)
     :param xlist: List of x-coordinates of walker(s) position
     :param ylist: List of y-coordinates of walker(s) position
-    :return:
+    :return: none
     """
+    # set figure and axis
     fig = plt.figure(figsize=(8,8), dpi=200)
     ax = fig.add_subplot(111)
+    # create list of unique colors
     color = iter(plt.cm.rainbow(np.linspace(0, 1, walkers)))
     for w in range(walkers):
         c = next(color)
         pathX = xlist[w]
         pathY = ylist[w]
+        # plot vertices, path, start position and end position
         ax.scatter(pathX, pathY, color=c, alpha=0.25, s=1)
         ax.plot(pathX, pathY, color=c, alpha=0.25, lw=2, label='%s. walker' % (w+1))
         ax.plot(pathX[0],pathY[0], color=c, marker='o')
@@ -271,9 +296,16 @@ def plot_walkers(steps, walkers, xlist, ylist):
     plt.savefig(".\\rand_walk_{}_{}.png".format(walkers, steps))
     plt.show()
 
+
 def plot_raster(arr):
+    """
+    Plots landscape
+    :param arr: raster array of landscape
+    :return:
+    """
     plt.imshow(arr)
     plt.show()
+
 
 def main():
     #TODO document everything in the README
@@ -345,7 +377,7 @@ def main_clicks(total_steps, total_walkers, step_size, landscape, start_point):
         # multiple walkers
 
         walker(total_steps, x, y, step_size)
-        plot_walk(total_steps, x, y)    
+        plot_walk(total_steps, x, y)
 
 
 if __name__ == "__main__":
