@@ -7,34 +7,36 @@
 import numpy
 import matplotlib.pyplot as plt
 import random
-
-# defining the number of steps
-n = 100000
-
-# creating two array for containing x and y coordinate
-# of size equals to the number of size and filled up with 0's
-x = numpy.zeros(n)
-y = numpy.zeros(n)
-
-# filling the coordinates with random variables
-for i in range(1, n):
-    val = random.randint(1, 4)
-    if val == 1:
-        x[i] = x[i - 1] + 1
-        y[i] = y[i - 1]
-    elif val == 2:
-        x[i] = x[i - 1] - 1
-        y[i] = y[i - 1]
-    elif val == 3:
-        x[i] = x[i - 1]
-        y[i] = y[i - 1] + 1
-    else:
-        x[i] = x[i - 1]
-        y[i] = y[i - 1] - 1
+import argparse
+import random_walker
+from playground import Playground
 
 
-# plotting the walk
-plt.title("Random Walk ($n = " + str(n) + "$ steps)")
-plt.plot(x, y)
-plt.savefig("./rand_walk_{}.png".format(n))
-plt.show()
+COLORS = ['blue', 'orange', 'green', 'red', 'purple']
+
+
+def main(steps: int, walkers: int, save: bool):
+    playground = Playground(seed=1)
+    walker_list = random_walker.create_different_walkers(walkers, steps)
+    plt.title("Random Walk ($n = " + str(steps) + "$ steps)")
+    for x, y in playground.get_line_segments():
+        plt.plot(x, y, color='red')
+
+    for walker_index in range(walkers):
+        walker = walker_list[walker_index]
+        walker.execute_random_walk(playground)
+        # plotting the walk
+        plt.plot(walker.x_positions, walker.y_positions, label=str(type(walker).__name__) +' index: ' + str(walker_index))
+    if save:
+        plt.savefig("./rand_walk_{}.png".format(steps))
+    plt.legend()
+    plt.show()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Executes and prints some random walkers')
+    parser.add_argument('-s', '--steps', type=int, default=10000, help='number of steps per walker')
+    parser.add_argument('-w', '--walkers', type=int, default=1, help='number of walkers')
+    parser.add_argument('--save', action="store_true", help='save figure')
+    args = parser.parse_args()
+    main(args.steps, args.walkers, args.save)
