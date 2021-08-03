@@ -148,10 +148,14 @@ def create_different_walkers(count: int, steps: int) -> List[RandomWalker]:
     :return: Array of Walkers
     """
     result = []
+    # get subclasses from RandomWalker
     types = RandomWalker.__subclasses__()
     for i in range(count):
+        # pick random subclass
         random_type = types[random.randint(0, len(types) - 1)]
+        # generate object
         random_object = random_type(steps)
+        # add object to result array
         result.append(random_object)
     return result
 
@@ -180,7 +184,8 @@ class Bishop(RandomWalker):
     """Bishop Walker, can walk diagonal, using random step length between 0 and 20"""
     def __init__(self, *args):
         super().__init__(*args)
-        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft, WalkDirection.DownRight, WalkDirection.UpRight]
+        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft, WalkDirection.DownRight,
+                               WalkDirection.UpRight]
 
     def get_walk_step_length(self, walk_direction: WalkDirection) -> Union[int, float]:
         """Override base method to implement a random step length"""
@@ -191,7 +196,9 @@ class Queen(RandomWalker):
     """Queen Walker, can walk in each direction, using fixed step length of 20"""
     def __init__(self, *args):
         super().__init__(*args)
-        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft, WalkDirection.DownRight, WalkDirection.UpRight, WalkDirection.Up, WalkDirection.Down, WalkDirection.Right, WalkDirection.Left]
+        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft, WalkDirection.DownRight,
+                               WalkDirection.UpRight, WalkDirection.Up, WalkDirection.Down, WalkDirection.Right,
+                               WalkDirection.Left]
         self.step_length = 20
 
 

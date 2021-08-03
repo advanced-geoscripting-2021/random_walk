@@ -30,7 +30,8 @@ def main(steps: int, walkers: int, save: bool, map_seed: int, land_scale: int):
         walker = walker_list[walker_index]
         walker.execute_random_walk(playground)
         # plotting the walk
-        plt.plot(walker.x_positions, walker.y_positions, label=str(type(walker).__name__) +' index: ' + str(walker_index))
+        plt.plot(walker.x_positions, walker.y_positions, label=str(type(walker).__name__) + ' index: ' + str(
+            walker_index))
     # optional save the plot
     if save:
         plt.savefig("./rand_walk_{}.png".format(steps))
@@ -42,10 +43,10 @@ def main(steps: int, walkers: int, save: bool, map_seed: int, land_scale: int):
 if __name__ == '__main__':
     # Parse Arguments
     parser = argparse.ArgumentParser(description='Executes and prints some random walkers')
-    parser.add_argument('-s', '--steps', type=int, default=10000, help='number of steps per walker')
     parser.add_argument('-w', '--walkers', type=int, default=1, help='number of walkers')
-    parser.add_argument('-ps', '--playgroundseed', type=int, default=0, choices=[0, 1, 2], help='map generation seed')
     parser.add_argument('-ls', '--landscale', type=int, default=1, help='playground scale')
+    parser.add_argument('-ps', '--playgroundseed', type=int, default=0, choices=[0, 1, 2], help='map generation seed')
+    parser.add_argument('-s', '--steps', type=int, default=10000, help='number of steps per walker')
     parser.add_argument('--save', action="store_true", help='save figure')
     args = parser.parse_args()
     # Execute Main
