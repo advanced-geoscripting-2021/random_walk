@@ -9,13 +9,97 @@ import matplotlib.pyplot as plt
 import random
 import numpy as np
 import math
-
-def usr_input():
-    # command line stuff
-    pass
+import sys
+import click
 
 
-# filling the coordinates with random variables
+_total_steps_option = [
+    click.option(
+        "--total_steps",
+        "-ts",
+        default=10000,
+        type=int,
+        help="Specify the number of total steps for the random walker, Default is 10,000",
+    )
+]
+
+_total_walkers_option = [
+    click.option(
+        "--total_walkers",
+        "-tw",
+        default=1,
+        type=int,
+        help="Specify the number of total walkers, Default is 1",
+    )
+]
+
+_step_size_option = [
+    click.option(
+        "--step_size",
+        "-ss",
+        default=1,
+        type=int,
+        help="Specify the size of the steps taken, Default is 1",
+    )
+]
+
+_landscape_option = [
+    click.option(
+        "--landscape",
+        "-l",
+        default=False,
+        type=bool,
+        help="Specify whether a grid landscape exists as base layer or not, Default is False",
+    )
+]
+
+_start_point_option = [
+    click.option(
+        "--start_point",
+        "-sp",
+        default=False,
+        type=bool,
+        help="Specify whether the walkers shall start from the same point or not, Default is False",
+    )
+]
+
+
+def add_options(options):
+    """Functions adds options to cli."""
+
+    def _add_options(func):
+        for option in reversed(options):
+            func = option(func)
+        return func
+
+    return _add_options
+
+
+@click.group()
+@click.option('--verbose', is_flag=False, help="Will print verbose messages.")
+def cli(verbose: bool) -> None:
+    if verbose:
+        click.echo("We are in the verbose mode.")
+    click.echo("Hello World, inside the cli function")
+
+
+@cli.command()
+@add_options(_total_steps_option)
+@add_options(_total_walkers_option)
+@add_options(_step_size_option)
+@add_options(_landscape_option)
+@add_options(_start_point_option)
+def run(
+        total_steps: int,
+        total_walkers: int,
+        step_size: int,
+        landscape: bool,
+        start_point: bool,
+) -> None:
+    """ execute command to generate random walkers """
+    main_clicks(total_steps, total_walkers, step_size, landscape, start_point)
+
+
 def walker(n, x, y, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST")):
     """
     Normal random walker with step size 1
@@ -66,7 +150,6 @@ def landscape_walker(n, landscape, step_size=1, direction_set=("NORTH", "SOUTH",
 
     curr_pos = [33, 33]
     future_pos = [33, 33]
-    check = False
     for step in range(1, n):
         check = False
         while not check:
@@ -98,13 +181,15 @@ def landscape_walker(n, landscape, step_size=1, direction_set=("NORTH", "SOUTH",
 
 
 def generate_area(landscape: bool, n: int, fill = 0.1):
-    # old stuff
+    # for random walker without landscape
     x, y = np.zeros(n), np.zeros(n)
     if not landscape:
         return x, y
 
-    # new stuff
+    # random walker with landscape
+
     #TODO account for all fill points -> this method does not account for all
+
     arr = np.zeros((n, n))
 
     total_area = arr.size
@@ -118,6 +203,7 @@ def generate_area(landscape: bool, n: int, fill = 0.1):
     # centre with x, y
     upper_left = (int(centre - side_length / 2), int(centre - side_length / 2))
 
+    # place a polygon in the middle of the landscape
     for x in range(side_length):
         for y in range(side_length):
             arr[upper_left[0] + y, upper_left[1] + x] = 1
@@ -136,30 +222,50 @@ def plot_walk(n, x, y):
     # plt.savefig("./rand_walk_{}.png".format(n))
     plt.show()
 
+def plot_raster(arr):
+    plt.imshow(arr)
+    plt.show()
 
 def main():
     #TODO document everything in the README
+    total_steps = 10000
+    total_walkers = 1
+    step_size = 1
 
-    # defining the number of steps
-    n = 10000
+    landscape = generate_area(True, int(total_steps/100), 0.1)
+    walk = landscape_walker(int(total_steps/100), landscape)
 
-    landscape = generate_area(True, int(n/100), 0.1)
-    walk = landscape_walker(int(n/100), landscape)
-
-    plt.imshow(walk)
-    plt.show()
+    # plot landscape raster with obstacles and walker
+    plot_raster(walk)
 
     # creating two array for containing x and y coordinate
     # of size equals to the number of size and filled up with 0's
-    x, y = generate_area(False, n)
+    x, y = generate_area(False, total_steps)
     step_size = 10
     # multiple walkers
 
-    walker(n, x, y, step_size)
-
+    walker(total_steps, x, y, step_size)
     # x, y = fast_walker(n, x, y)
-    plot_walk(n, x, y)
+    plot_walk(total_steps, x, y)
 
+
+def main_clicks(total_steps, total_walkers, step_size, landscape, start_point):
+    # diverted because of the completely different implementation methods -> could be done better in the future
+    if landscape:
+        fill_percentage = 0.1
+        landscape_raster = generate_area(landscape, int(total_steps/100), fill_percentage)
+        walk = landscape_walker(int(total_steps/100), landscape_raster)
+        # plot landscape raster with obstacles and walker
+        plot_raster(walk)
+    else:
+        # creating two arrays for containing x and y coordinate
+        # of size equals to the number of size and filled up with 0's
+        x, y = generate_area(landscape, total_steps)
+
+        # multiple walkers
+
+        walker(total_steps, x, y, step_size)
+        plot_walk(total_steps, x, y)
 
 
 if __name__ == "__main__":
