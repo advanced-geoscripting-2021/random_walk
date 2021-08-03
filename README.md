@@ -9,7 +9,7 @@ The Goal is to **practise writing readable, maintainable and reliable code colla
 
 In this repo you find a basic implementation of a [random walk simulation](https://en.wikipedia.org/wiki/Random_walk) in 2-dimensional space taken from [this blogpost](https://www.geeksforgeeks.org/random-walk-implementation-python/). Running the code yields an image which shows the path of the random walk. 
 
-![random_walk](rand_walk_100000.png)
+![random_walk](rand_walk_5_100.png)
 
 ## Setting up the project
 1. clone repository
