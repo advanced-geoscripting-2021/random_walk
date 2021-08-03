@@ -4,37 +4,27 @@
 
 # Python code for 2D random walk.
 # Source: https://www.geeksforgeeks.org/random-walk-implementation-python/
-import numpy
+
 import matplotlib.pyplot as plt
-import random
+from randomwalk import Walker
 
-# defining the number of steps
-n = 100000
+def main():
+    # defining the number of steps
+    n = 100000
 
-# creating two array for containing x and y coordinate
-# of size equals to the number of size and filled up with 0's
-x = numpy.zeros(n)
-y = numpy.zeros(n)
-
-# filling the coordinates with random variables
-for i in range(1, n):
-    val = random.randint(1, 4)
-    if val == 1:
-        x[i] = x[i - 1] + 1
-        y[i] = y[i - 1]
-    elif val == 2:
-        x[i] = x[i - 1] - 1
-        y[i] = y[i - 1]
-    elif val == 3:
-        x[i] = x[i - 1]
-        y[i] = y[i - 1] + 1
-    else:
-        x[i] = x[i - 1]
-        y[i] = y[i - 1] - 1
+    walker1 = Walker(100, 100)
+    walker2 = Walker(200,200)
+    for i in range(1, n):
+        walker1.walk()
+        walker2.walk()
 
 
-# plotting the walk
-plt.title("Random Walk ($n = " + str(n) + "$ steps)")
-plt.plot(x, y)
-plt.savefig("./rand_walk_{}.png".format(n))
-plt.show()
+    # plotting the walk
+    plt.title("Random Walk ($n = " + str(n) + "$ steps)")
+    plt.plot(walker1.x_coords, walker1.y_coords)
+    plt.plot(walker2.x_coords, walker2.y_coords)
+    plt.savefig("./rand_walk_{}.png".format(n))
+    plt.show()
+
+if __name__ == "__main__":
+    main()
