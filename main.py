@@ -24,10 +24,10 @@ def user_input():
 
 # filling the coordinates with random variables
 
-def walker(x, y, steps, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST"), dif_start):
+def walker(x, y, steps, dif_start, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST")):
     """
     Normal random walker with step size 1
-    :param n: number of steps
+    :param steps: number of steps
     :param step_size: defines the size of the steps
     :param x: empty numpy array consisting of n zeros
     :param y: empty numpy array consisting of n zeros
@@ -78,7 +78,7 @@ def landscape_walker(steps, landscape, step_size=1, direction_set=("NORTH", "SOU
     curr_pos = [33, 33]
     future_pos = [33, 33]
     check = False
-    for step in range(1, n):
+    for step in range(1, steps):
         check = False
         while not check:
             direction = random.choice(direction_set)
@@ -142,11 +142,11 @@ def some_other_walker():
     #return x, y
 
 
-def multiple_walkers(steps, x, y, walkers, dif_start):
+def multiple_walkers(x, y, steps, walkers, dif_start):
     xlist = []
     ylist = []
     for w in range(walkers):
-        x_axis, y_axis = normal_walker(steps, x, y, dif_start)
+        x_axis, y_axis = walker(x, y, steps, dif_start)
         xlist.append(x_axis)
         ylist.append(y_axis)
         x = np.zeros(steps)
@@ -156,6 +156,14 @@ def multiple_walkers(steps, x, y, walkers, dif_start):
 
 # plotting the walk
 def plot_walkers(steps, walkers, xlist, ylist):
+    """
+    Generates plot of walker(s) and saves figure as PNG file.
+    :param steps: Number of steps (needed for a figure title)
+    :param walkers: Number of walkers (needed for a figure title)
+    :param xlist: List of x-coordinates of walker(s) position
+    :param ylist: List of y-coordinates of walker(s) position
+    :return:
+    """
     fig = plt.figure(figsize=(8,8), dpi=200)
     ax = fig.add_subplot(111)
     color = iter(plt.cm.rainbow(np.linspace(0, 1, walkers)))
@@ -170,6 +178,8 @@ def plot_walkers(steps, walkers, xlist, ylist):
     plt.legend()
     plt.title("Random Walk (Number of walkers = " + str(walkers) + ", $n = " + str(steps) + "$ steps)")
     plt.savefig(".\\rand_walk_{}_{}.png".format(walkers, steps))
+    plt.show()
+
 
 def main():
     #TODO document everything in the README
@@ -200,7 +210,7 @@ def main():
     y = np.zeros(steps)
 
     # multiple walkers
-    listX, listY = multiple_walkers(steps, x, y, walkers, dif_start)
+    listX, listY = multiple_walkers(x, y, steps, walkers, dif_start)
 
     plot_walkers(steps, walkers, listX, listY)
 
