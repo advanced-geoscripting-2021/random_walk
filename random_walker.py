@@ -3,11 +3,11 @@
 from enum import Enum
 from math import sqrt
 from typing import List, Union
-import numpy as np
 import random
+import numpy as np
 from playground import Playground
 
-"""constant for square root of 2"""
+# constant for square root of 2
 SQRT2 = sqrt(2)
 
 
@@ -118,15 +118,19 @@ class RandomWalker:
         """
         walk_direction = self.get_random_walk_direction()
         self.x_positions[index] = \
-            self.x_positions[index - 1] + walk_direction.get_x_factor() * self.get_walk_step_length(walk_direction)
+            self.x_positions[index - 1] + \
+            walk_direction.get_x_factor() * self.get_walk_step_length(walk_direction)
         self.y_positions[index] = \
-            self.y_positions[index - 1] + walk_direction.get_y_factor() * self.get_walk_step_length(walk_direction)
-        if not playground.is_position_in_playground(self.x_positions[index], self.y_positions[index]):
+            self.y_positions[index - 1] + \
+            walk_direction.get_y_factor() * self.get_walk_step_length(walk_direction)
+        if not playground.is_position_in_playground(self.x_positions[index],
+                                                    self.y_positions[index]):
             self.reset_position(index)
 
     def execute_random_walk(self, playground: Playground, start_x: int = 0, start_y: int = 0):
         """
-        Execute the random walk calculation for all steps, starting at start_x, start_y on a playground
+        Execute the random walk calculation for all steps, starting at start_x,
+        start_y on a playground
 
         :param playground: Playground for the walker
         :param start_x: start position x
@@ -174,9 +178,10 @@ class King(RandomWalker):
     """King Walker, can walk in each directions, but only one field"""
     def __init__(self, *args):
         super().__init__(*args)
-        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft, WalkDirection.DownRight,
-                               WalkDirection.UpRight, WalkDirection.Up, WalkDirection.Down, WalkDirection.Right,
-                               WalkDirection.Left]
+        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft,
+                               WalkDirection.DownRight, WalkDirection.UpRight,
+                               WalkDirection.Up, WalkDirection.Down,
+                               WalkDirection.Right, WalkDirection.Left]
         self.step_length = 1
 
 
@@ -184,8 +189,8 @@ class Bishop(RandomWalker):
     """Bishop Walker, can walk diagonal, using random step length between 0 and 20"""
     def __init__(self, *args):
         super().__init__(*args)
-        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft, WalkDirection.DownRight,
-                               WalkDirection.UpRight]
+        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft,
+                               WalkDirection.DownRight, WalkDirection.UpRight]
 
     def get_walk_step_length(self, walk_direction: WalkDirection) -> Union[int, float]:
         """Override base method to implement a random step length"""
@@ -196,9 +201,10 @@ class Queen(RandomWalker):
     """Queen Walker, can walk in each direction, using fixed step length of 20"""
     def __init__(self, *args):
         super().__init__(*args)
-        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft, WalkDirection.DownRight,
-                               WalkDirection.UpRight, WalkDirection.Up, WalkDirection.Down, WalkDirection.Right,
-                               WalkDirection.Left]
+        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft,
+                               WalkDirection.DownRight, WalkDirection.UpRight,
+                               WalkDirection.Up, WalkDirection.Down,
+                               WalkDirection.Right, WalkDirection.Left]
         self.step_length = 20
 
 
@@ -207,7 +213,9 @@ class Pawn(RandomWalker):
     def __init__(self, *args):
         super().__init__(*args)
         if random.randint(0, 1) == 0:
-            self.walkDirections = [WalkDirection.Up, WalkDirection.UpLeft, WalkDirection.UpRight]
+            self.walkDirections = [WalkDirection.Up, WalkDirection.UpLeft,
+                                   WalkDirection.UpRight]
         else:
-            self.walkDirections = [WalkDirection.Down, WalkDirection.DownLeft, WalkDirection.DownRight]
+            self.walkDirections = [WalkDirection.Down, WalkDirection.DownLeft,
+                                   WalkDirection.DownRight]
         self.step_length = 1
