@@ -75,11 +75,10 @@ def add_options(options):
 
 
 @click.group()
-@click.option('--verbose', is_flag=False, help="Will print verbose messages.")
+@click.option('--verbose', '-v', is_flag=False, help="Will print verbose messages.")
 def cli(verbose: bool) -> None:
     if verbose:
-        click.echo("We are in the verbose mode.")
-    click.echo("Hello World, inside the cli function")
+        click.echo("We are in the verbose mode. Which does not make any difference right now.. but hey, have fun!")
 
 
 @cli.command()
@@ -159,7 +158,7 @@ def check_landscape(landscape, position):
     return False
 
 
-def landscape_walker(steps, landscape, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST")):
+def landscape_walker(total_steps, landscape, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST")):
     """
     Normal random walker with step size 1
     :param n: number of steps
@@ -174,7 +173,7 @@ def landscape_walker(steps, landscape, step_size=1, direction_set=("NORTH", "SOU
     curr_pos = [33, 33]
     future_pos = [33, 33]
 
-    for step in range(1, steps):
+    for step in range(0, total_steps):
         check = False
         while not check:
             direction = random.choice(direction_set)
@@ -382,4 +381,5 @@ def main_clicks(total_steps, total_walkers, step_size, landscape, start_point):
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    main_clicks(10000, 1, 1, False, False)
