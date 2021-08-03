@@ -4,19 +4,27 @@
 
 # Python code for 2D random walk.
 # Source: https://www.geeksforgeeks.org/random-walk-implementation-python/
-
 import matplotlib.pyplot as plt
 import random
 import numpy as np
 import math
+import sys
 
-def usr_input():
-    # command line stuff
-    pass
+
+def user_input():
+    try:
+        walkers = int(sys.argv[1])
+        steps = int(sys.argv[2])
+        dif_start = bool(int(sys.argv[3]))
+    except Exception as err:
+        print("Incorrect input: ", err)
+        sys.exit()
+    return walkers, steps, dif_start
 
 
 # filling the coordinates with random variables
-def walker(n, x, y, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST")):
+
+def walker(x, y, steps, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST"), dif_start):
     """
     Normal random walker with step size 1
     :param n: number of steps
@@ -26,9 +34,12 @@ def walker(n, x, y, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST"
     :param direction_set: defines a set of directions, default values North, South, East, West
     :return: x, y numpy arrays
     """
-
-    for pos in range(1, n):
+    if dif_start is True:
+        x[0] = random.randint(-10, 10)
+        y[0] = random.randint(-10, 10)
+    for pos in range(1, steps):
         direction = random.choice(direction_set)
+
         # go east
         if direction == "EAST":
             x[pos] = x[pos - 1] + step_size
@@ -53,7 +64,7 @@ def check_landscape(landscape, position):
         return True
     return False
 
-def landscape_walker(n, landscape, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST")):
+def landscape_walker(steps, landscape, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST")):
     """
     Normal random walker with step size 1
     :param n: number of steps
@@ -125,41 +136,73 @@ def generate_area(landscape: bool, n: int, fill = 0.1):
 
 
 def some_other_walker():
-    # maybe morsche neighbourhood
     pass
+    # maybe morsche neighbourhood
+    #        y[pos] = y[pos - 1] - 1
+    #return x, y
+
+
+def multiple_walkers(steps, x, y, walkers, dif_start):
+    xlist = []
+    ylist = []
+    for w in range(walkers):
+        x_axis, y_axis = normal_walker(steps, x, y, dif_start)
+        xlist.append(x_axis)
+        ylist.append(y_axis)
+        x = np.zeros(steps)
+        y = np.zeros(steps)
+    return xlist, ylist
 
 
 # plotting the walk
-def plot_walk(n, x, y):
-    plt.title("Random Walk ($n = " + str(n) + "$ steps)")
-    plt.plot(x, y)
-    # plt.savefig("./rand_walk_{}.png".format(n))
-    plt.show()
-
+def plot_walkers(steps, walkers, xlist, ylist):
+    fig = plt.figure(figsize=(8,8), dpi=200)
+    ax = fig.add_subplot(111)
+    color = iter(plt.cm.rainbow(np.linspace(0, 1, walkers)))
+    for w in range(walkers):
+        c = next(color)
+        pathX = xlist[w]
+        pathY = ylist[w]
+        ax.scatter(pathX, pathY, color=c, alpha=0.25, s=1)
+        ax.plot(pathX, pathY, color=c, alpha=0.25, lw=2, label='%s. walker' % (w+1))
+        ax.plot(pathX[0],pathY[0], color=c, marker='o')
+        ax.plot(pathX[-1], pathY[-1], color=c, marker='+')
+    plt.legend()
+    plt.title("Random Walk (Number of walkers = " + str(walkers) + ", $n = " + str(steps) + "$ steps)")
+    plt.savefig(".\\rand_walk_{}_{}.png".format(walkers, steps))
 
 def main():
     #TODO document everything in the README
 
     # defining the number of steps
-    n = 10000
 
-    landscape = generate_area(True, int(n/100), 0.1)
-    walk = landscape_walker(int(n/100), landscape)
+    #landscape = generate_area(True, int(steps/100), 0.1)
+    #walk = landscape_walker(int(steps/100), landscape)
 
-    plt.imshow(walk)
-    plt.show()
+    #plt.imshow(walk)
+    #plt.show()
 
     # creating two array for containing x and y coordinate
     # of size equals to the number of size and filled up with 0's
-    x, y = generate_area(False, n)
-    step_size = 10
+    #x, y = generate_area(False, n)
+    #step_size = 10
     # multiple walkers
 
-    walker(n, x, y, step_size)
+    #walker(n, x, y, step_size)
 
     # x, y = fast_walker(n, x, y)
-    plot_walk(n, x, y)
+    #plot_walk(n, x, y)
+    
+    walkers, steps, dif_start = user_input()
+    # creating two array for containing x and y coordinate
+    # of size equals to the number of size and filled up with 0's
+    x = np.zeros(steps)
+    y = np.zeros(steps)
 
+    # multiple walkers
+    listX, listY = multiple_walkers(steps, x, y, walkers, dif_start)
+
+    plot_walkers(steps, walkers, listX, listY)
 
 
 if __name__ == "__main__":
