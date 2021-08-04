@@ -7,7 +7,7 @@
 
 import click
 import raster_walker as rw
-import vector_walkers as vw
+import vector_walker as vw
 
 
 # user input – click
@@ -139,6 +139,7 @@ def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_st
 
         # multiple walkers
         list_x, list_y = vw.multiple_v_walkers(x, y, total_steps, total_walkers, step_size, diff_start, mov_pattern)
+        print(list_x)
         vw.plot_v_walkers(total_steps, total_walkers, list_x, list_y)
 
 
