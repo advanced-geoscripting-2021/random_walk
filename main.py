@@ -61,6 +61,15 @@ _start_point_option = [
     )
 ]
 
+_neighborhood_option = [
+    click.option(
+        "--mov_pattern",
+        "-mp",
+        default=False,
+        type=bool,
+        help="Specify the neighborhood movement pattern, False is Neumann, True is Moor",
+    )
+]
 
 def add_options(options):
     """Functions adds options to cli."""
@@ -97,6 +106,7 @@ def run(
 
 
 def next_step(x, y, pos, direction, step_size):
+    """ Returns the next step for a random walker"""
     # go east
     if direction == "EAST":
         x[pos] = x[pos - 1] + step_size
@@ -110,13 +120,40 @@ def next_step(x, y, pos, direction, step_size):
         x[pos] = x[pos - 1]
         y[pos] = y[pos - 1] + step_size
     # go south
-    else:
+    elif direction == "SOUTH":
         x[pos] = x[pos - 1]
+        y[pos] = y[pos - 1] - step_size
+    # go northeast
+    elif direction == "NORTHEAST":
+        x[pos] = x[pos - 1] + step_size
+        y[pos] = y[pos - 1] + step_size
+    # go northwest
+    elif direction == "NORTHWEST":
+        x[pos] = x[pos - 1] - step_size
+        y[pos] = y[pos - 1] + step_size
+    # go southeast
+    elif direction == "SOUTHEAST":
+        x[pos] = x[pos - 1] + step_size
+        y[pos] = y[pos - 1] - step_size
+    # go southwest
+    elif direction == "SOUTHWEST":
+        x[pos] = x[pos - 1] - step_size
         y[pos] = y[pos - 1] - step_size
     return x, y
 
 
-def walker(x, y, total_steps, diff_start, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST")):
+def different_start_pos(total_steps):
+    """returns a tuple at a randomly selected position"""
+    start_shift = int(total_steps / 100)
+    return random.randint(-start_shift, start_shift)
+
+
+def get_random_direction(direction_set):
+    """Returns a random direction"""
+    return random.choice(direction_set)
+
+
+def walker(x, y, total_steps, diff_start, step_size=1, mov_pattern=False):
     """
     Normal random walker with step size 1
     :param diff_start:
@@ -124,15 +161,26 @@ def walker(x, y, total_steps, diff_start, step_size=1, direction_set=("NORTH", "
     :param step_size: defines the size of the steps
     :param x: empty numpy array consisting of n zeros
     :param y: empty numpy array consisting of n zeros
-    :param direction_set: defines a set of directions, default values North, South, East, West
+    :param mov_pattern: boolean, if True, Moor'sche neighboorhood is used, else Neumann
     :return: x, y numpy arrays
     """
 
+    # checks which movement set the walker should get
+    # Neumann or Moor
+    if not mov_pattern:
+        # von Neumann neighborhood
+        direction_set = ("NORTH", "SOUTH", "EAST", "WEST")
+    else:
+        # Moor'sche neighborhood
+        direction_set = ("NORTH", "SOUTH", "EAST", "WEST", "NORTHWEST", "NORTHEAST", "SOUTHWEST", "SOUTHEAST")
+
+    # get random start position if that is wanted
     if diff_start is True:
-        x[0] = random.randint(-total_steps / 100, total_steps / 100)
-        y[0] = random.randint(-total_steps / 100, total_steps / 100)
+        x[0] = different_start_pos(total_steps)
+        y[0] = different_start_pos(total_steps)
+    # for the total number of steps, calculate walker movement randomly
     for pos in range(1, total_steps):
-        direction = random.choice(direction_set)
+        direction = get_random_direction(direction_set)
         x, y = next_step(x, y, pos, direction, step_size)
     return x, y
 
@@ -158,7 +206,7 @@ def landscape_walker(landscape, total_steps, step_size=1, direction_set=("NORTH"
     :param direction_set: defines a set of directions, default values North, South, East, West
     :return: x, y numpy arrays
     """
- 
+
     # TODO: ADJUST IT dynamically
     curr_pos = [33, 33]
     future_pos = [33, 33]
@@ -227,13 +275,8 @@ def generate_area(landscape: bool, n: int, fill=0.1):
     return arr
 
 
-def some_other_walker():
-    pass
-    # maybe morsche neighbourhood
-
-
 #TODO: implement multiple walkers for landscape walkers (and other possible walkers)
-def multiple_walkers(x, y, total_steps, total_walkers, step_size, diff_start):
+def multiple_walkers(x, y, total_steps, total_walkers, step_size, diff_start, mov_pattern):
     """
     Generates paths for multiple walkers
     :param x: np.array of x-coordinates (input: zeros)
@@ -243,6 +286,7 @@ def multiple_walkers(x, y, total_steps, total_walkers, step_size, diff_start):
     :param step_size: defines the size of the steps
     :param diff_start: bool value – if True, walkers start from different position
                                    if False, walkers start from the same position
+    :param mov_pattern: boolean, if True, Moor'sche neighboorhood is used, else Neumann
     :return: lists of x and y coordinates
     """
     # create empty lists
@@ -250,7 +294,7 @@ def multiple_walkers(x, y, total_steps, total_walkers, step_size, diff_start):
     y_list = []
     for w in range(total_walkers):
         # call walker function to generate array of x and y coordinates of one walker
-        x_axis, y_axis = walker(x, y, total_steps, diff_start, step_size, )
+        x_axis, y_axis = walker(x, y, total_steps, diff_start, step_size, mov_pattern)
         # append to list
         x_list.append(x_axis)
         y_list.append(y_axis)
@@ -301,7 +345,7 @@ def plot_raster(arr):
     plt.show()
 
 
-def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_start):
+def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_start, mov_pattern):
     """
     executes the random walker tool based on input data
     :param total_steps: number of total steps of the random walker
@@ -309,6 +353,7 @@ def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_st
     :param step_size: step size for each step
     :param landscape: boolean, if True, 2D area with obstacles is generated as base layer
     :param diff_start: boolean, if True, different start points for each walker
+    :param mov_pattern: boolean, if True, Moor'sche neighboorhood is used, else Neumann
     :return:
     """
 
@@ -331,9 +376,9 @@ def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_st
         x, y = generate_area(landscape, total_steps)
 
         # multiple walkers
-        list_x, list_y = multiple_walkers(x, y, total_steps, total_walkers, step_size, diff_start)
+        list_x, list_y = multiple_walkers(x, y, total_steps, total_walkers, step_size, diff_start, mov_pattern)
         plot_walkers(total_steps, total_walkers, list_x, list_y)
 
 
 if __name__ == "__main__":
-    run_random_walkers(10000, 5, 1, False, True)
+    run_random_walkers(100, 1, 1, False, True, True)
