@@ -10,6 +10,7 @@ The Goal is to **practise writing readable, maintainable and reliable code colla
 In this repo you find a basic implementation of a [random walk simulation](https://en.wikipedia.org/wiki/Random_walk) in 2-dimensional space taken from [this blogpost](https://www.geeksforgeeks.org/random-walk-implementation-python/). Running the code yields an image which shows the path of the random walk. 
 
 ![random_walk](rand_walk_5_100.png)
+start: point; end: cross
 
 ## Setting up the project
 1. clone repository
@@ -65,7 +66,3 @@ Options:
 
 ## Example
 ``random_walker run --total_steps 10000 --step_size 2 -l False``
-
-4. Document the dependencies and instructions of how to run the program in your README.md.
-
-
