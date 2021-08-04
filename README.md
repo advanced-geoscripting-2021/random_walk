@@ -14,6 +14,9 @@ The result will be directly shown to the user and additionally saved as png.
 ![random_walk](rand_walk_5_100.png)
 start: point; end: cross
 
+An example for the landscape raster walker
+![img_1.png](img_1.png)
+
 ## Setting up the project
 1. clone repository
 2. setup a virtual environment
