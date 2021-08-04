@@ -119,7 +119,7 @@ def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_st
     :return:
     """
 
-    # adjust wrong input
+    # adjust wrong input, quick but powerful!;)
     if total_steps < 100:
         total_steps = 100
     if total_walkers < 1:
