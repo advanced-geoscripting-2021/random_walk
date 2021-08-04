@@ -17,7 +17,7 @@ _total_steps_option = [
         "-ts",
         default=10000,
         type=int,
-        help="Specify the number of total steps for each random walker, Default is 10,000, Minimum 10",
+        help="Specify the number of total steps for each random walker, Default is 10,000, Minimum 100",
     )
 ]
 
@@ -120,18 +120,19 @@ def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_st
     """
 
     # adjust wrong input
-    if total_steps < 10:
-        total_steps = 10
+    if total_steps < 100:
+        total_steps = 100
     if total_walkers < 1:
         total_walkers = 1
 
     # diverted because of the completely different implementation methods -> could be done better in the future
     if landscape:
+        # percentage of how much space obstacles shall block
         fill_percentage = 0.1
-        landscape_raster = rw.create_raster(int(total_steps/100), fill_percentage)
-        walk = rw.r_walker(int(total_steps/100), landscape_raster)
+        landscape_raster = rw.create_raster(total_steps, fill_percentage)
+        walk = rw.r_walker(total_steps, landscape_raster)
         # plot landscape raster with obstacles and walker
-        rw.plot_raster(walk)
+        rw.plot_raster(walk, total_steps)
     else:
         # creating two arrays for containing x and y coordinate
         # of size equals to the number of size and filled up with 0's
@@ -143,4 +144,4 @@ def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_st
 
 
 if __name__ == "__main__":
-    run_random_walkers(100, 5, 1, False, True, True)
+    run_random_walkers(10, 5, 1, True, True, True)
