@@ -25,11 +25,11 @@ class Walker:
         """
         last_x = self.x_coords[-1]
         last_y = self.y_coords[-1]
-        new_x, new_y = self.next_step(last_x, last_y)
+        new_x, new_y = self.nextStep(last_x, last_y)
         self.x_coords.append(new_x)
         self.y_coords.append(new_y)
 
-    def next_step(self, last_x, last_y):
+    def nextStep(self, last_x, last_y):
         """
         Choose next position randomly
         :return:
