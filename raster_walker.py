@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 """ Rasterized Walker"""
 
-import matplotlib.pyplot as plt
+
 import random
-import numpy as np
 import math
+import numpy as np
+import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from matplotlib.patches import Patch
 
@@ -31,6 +32,13 @@ def check_landscape(landscape, position):
 
 
 def raster_one_step(direction, curr_pos, future_pos):
+    """
+    Alters given position based on given direction
+    :param direction: String, celestial direction
+    :param curr_pos: the current position
+    :param future_pos: future position
+    :return: updated future position
+    """
     if direction == "EAST":
         future_pos[1] = curr_pos[1] + 1
     elif direction == "WEST":
@@ -102,9 +110,9 @@ def create_raster(total_steps: int, fill=0.1):
     upper_left = (int(centre - side_length_obstacle / 2), int(centre - side_length_obstacle / 2))
 
     # places an obstacle as square in the middle of the landscape arr
-    for x in range(side_length_obstacle):
-        for y in range(side_length_obstacle):
-            arr[upper_left[0] + y, upper_left[1] + x] = 1
+    for row in range(side_length_obstacle):
+        for col in range(side_length_obstacle):
+            arr[upper_left[0] + col, upper_left[1] + row] = 1
     return arr
 
 
@@ -117,11 +125,11 @@ def plot_raster(arr, total_steps):
     """
     cmap = ListedColormap(["grey", "black", "darkgreen", "red"])
 
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, axs = plt.subplots(figsize=(10, 5))
 
-    ax.imshow(arr, cmap=cmap,)
+    axs.imshow(arr, cmap=cmap)
 
-    ax.set_title("Random Walk (Number of walkers = 1, total steps: " + str(total_steps))
+    axs.set_title("Random Walk (Number of walkers = 1, total steps: " + str(total_steps))
 
     # Add a legend for labels
     legend_labels = {"black": "obstacle", "darkgreen": "path", "red": "start point"}
@@ -129,9 +137,10 @@ def plot_raster(arr, total_steps):
     patches = [Patch(color=color, label=label)
                for color, label in legend_labels.items()]
 
-    ax.legend(handles=patches,
-              bbox_to_anchor=(1.35, 1),
-              facecolor="white")
+    axs.legend(handles=patches,
+               bbox_to_anchor=(1.35, 1),
+               facecolor="white")
 
-    ax.set_axis_off()
+    axs.set_axis_off()
+    plt.savefig(".\\rand_walk_raster_{}.png".format(total_steps))
     plt.show()
