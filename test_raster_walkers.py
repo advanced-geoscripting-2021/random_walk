@@ -22,8 +22,11 @@ def test_raster_one_step():
     future_pos = [0, 0]
 
     pos_north = rw.raster_one_step(direction_set[0], curr_pos, future_pos)
+    future_pos = [0, 0]
     pos_south = rw.raster_one_step(direction_set[1], curr_pos, future_pos)
+    future_pos = [0, 0]
     pos_east = rw.raster_one_step(direction_set[2], curr_pos, future_pos)
+    future_pos = [0, 0]
     pos_west = rw.raster_one_step(direction_set[3], curr_pos, future_pos)
 
     expected_north = [1, 0]
@@ -35,7 +38,17 @@ def test_raster_one_step():
     assert pos_south == expected_south
     assert pos_east == expected_east
     assert pos_west == expected_west
+    print("raster_one_step worked")
+
+
+def test_check_landscape():
+    raster = np.zeros((4, 4))
+    raster[1:3, 1:3] = 1
+
+    rw.check_landscape()
+
+
 
 
 test_raster_one_step()
-test_walker()
+test_create_raster()
