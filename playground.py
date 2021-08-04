@@ -17,6 +17,8 @@ class Playground:
         """
         self.x_max = scaling * x_max
         self.y_max = scaling * y_max
+        x_max = self.x_max
+        y_max = self.y_max
         border_polygon = [
             (-x_max, -y_max),
             (-x_max, y_max),

@@ -13,44 +13,44 @@ SQRT2 = sqrt(2)
 
 class WalkDirection(Enum):
     """Enum Class with all possible walk directions"""
-    Right = 1
-    Left = 2
-    Up = 3
-    Down = 4
-    UpRight = 5
-    UpLeft = 6
-    DownRight = 7
-    DownLeft = 8
+    RIGHT = 1
+    LEFT = 2
+    UP = 3
+    DOWN = 4
+    UPRIGHT = 5
+    UPLEFT = 6
+    DOWNRIGHT = 7
+    DOWNLEFT = 8
 
     def get_x_factor(self) -> float:
         """
-        get the x amount of a walk direction
+        Get the x amount of a walk direction
 
         :return: x amount
         """
-        if self.name == 'Right':
+        if self.name == 'RIGHT':
             return 1
-        elif self.name == 'Left':
+        if self.name == 'LEFT':
             return -1
-        elif self.name == 'Up' or self.name == 'Down':
+        if self.name == 'UP' or self.name == 'DOWN':
             return 0
-        elif self.name == 'UpRight' or self.name == 'DownRight':
+        if self.name == 'UPRIGHT' or self.name == 'DOWNRIGHT':
             return SQRT2
         return -SQRT2
 
     def get_y_factor(self) -> float:
         """
-        get the y amount of a walk direction
+        Get the y amount of a walk direction
 
         :return: y amount
         """
-        if self.name == 'Right' or self.name == 'Left':
+        if self.name == 'RIGHT' or self.name == 'LEFT':
             return 0
-        elif self.name == 'Up':
+        if self.name == 'UP':
             return 1
-        elif self.name == 'Down':
+        if self.name == 'DOWN':
             return -1
-        elif self.name == 'UpRight' or self.name == 'UpLeft':
+        if self.name == 'UPRIGHT' or self.name == 'UPLEFT':
             return SQRT2
         return -SQRT2
 
@@ -70,8 +70,8 @@ class RandomWalker:
         # number of steps
         self.steps = steps
         # possible walk directions
-        self.walkDirections: List[WalkDirection] = \
-            [WalkDirection.Right, WalkDirection.Left, WalkDirection.Up, WalkDirection.Down]
+        self.walk_directions: List[WalkDirection] = \
+            [WalkDirection.RIGHT, WalkDirection.LEFT, WalkDirection.UP, WalkDirection.DOWN]
         # positions at each step
         self.x_positions = np.zeros(self.steps, dtype=float)
         self.y_positions = np.zeros(self.steps, dtype=float)
@@ -84,7 +84,7 @@ class RandomWalker:
 
         :return: WalkDirection
         """
-        return self.walkDirections[random.randint(0, len(self.walkDirections) - 1)]
+        return self.walk_directions[random.randint(0, len(self.walk_directions) - 1)]
 
     def get_walk_step_length(self, walk_direction: WalkDirection) -> Union[int, float]:
         """
@@ -94,7 +94,9 @@ class RandomWalker:
         :param walk_direction: direction for this step
         :return: step length
         """
-        return self.step_length
+        if walk_direction in self.walk_directions:
+            return self.step_length
+        return 0
 
     def reset_position(self, index: int):
         """
@@ -117,12 +119,13 @@ class RandomWalker:
         :return: None
         """
         walk_direction = self.get_random_walk_direction()
+        step_length = self.get_walk_step_length(walk_direction)
         self.x_positions[index] = \
             self.x_positions[index - 1] + \
-            walk_direction.get_x_factor() * self.get_walk_step_length(walk_direction)
+            walk_direction.get_x_factor() * step_length
         self.y_positions[index] = \
             self.y_positions[index - 1] + \
-            walk_direction.get_y_factor() * self.get_walk_step_length(walk_direction)
+            walk_direction.get_y_factor() * step_length
         if not playground.is_position_in_playground(self.x_positions[index],
                                                     self.y_positions[index]):
             self.reset_position(index)
@@ -143,24 +146,41 @@ class RandomWalker:
             self.calculate_position(index, playground)
 
 
-def create_different_walkers(count: int, steps: int) -> List[RandomWalker]:
+def create_different_walkers(count: int, steps: int, walker_types: List[str]) -> List[RandomWalker]:
     """
     Walker Factory creating random walkers which were inherited from the class RandomWalker
 
     :param count: number of walkers
     :param steps: steps for the walkers
+    :param walker_types: specify the possible walker types to choose
     :return: Array of Walkers
     """
     result = []
     # get subclasses from RandomWalker
     types = RandomWalker.__subclasses__()
-    for i in range(count):
+    for _ in range(count):
         # pick random subclass
         random_type = types[random.randint(0, len(types) - 1)]
+        while random_type.__name__ not in walker_types:
+            random_type = types[random.randint(0, len(types) - 1)]
         # generate object
         random_object = random_type(steps)
         # add object to result array
         result.append(random_object)
+    return result
+
+
+def get_walker_names() -> List[str]:
+    """
+    Get all possible walker names from RandomWalker subclasses
+
+    :return: List of Class Names
+    """
+    result = []
+    # get subclasses from RandomWalker
+    types = RandomWalker.__subclasses__()
+    for class_type in types:
+        result.append(class_type.__name__)
     return result
 
 
@@ -178,10 +198,10 @@ class King(RandomWalker):
     """King Walker, can walk in each directions, but only one field"""
     def __init__(self, *args):
         super().__init__(*args)
-        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft,
-                               WalkDirection.DownRight, WalkDirection.UpRight,
-                               WalkDirection.Up, WalkDirection.Down,
-                               WalkDirection.Right, WalkDirection.Left]
+        self.walk_directions = [WalkDirection.DOWNLEFT, WalkDirection.UPLEFT,
+                                WalkDirection.DOWNRIGHT, WalkDirection.UPRIGHT,
+                                WalkDirection.UP, WalkDirection.DOWN,
+                                WalkDirection.RIGHT, WalkDirection.LEFT]
         self.step_length = 1
 
 
@@ -189,8 +209,8 @@ class Bishop(RandomWalker):
     """Bishop Walker, can walk diagonal, using random step length between 0 and 20"""
     def __init__(self, *args):
         super().__init__(*args)
-        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft,
-                               WalkDirection.DownRight, WalkDirection.UpRight]
+        self.walk_directions = [WalkDirection.DOWNLEFT, WalkDirection.UPLEFT,
+                                WalkDirection.DOWNRIGHT, WalkDirection.UPRIGHT]
 
     def get_walk_step_length(self, walk_direction: WalkDirection) -> Union[int, float]:
         """Override base method to implement a random step length"""
@@ -201,10 +221,10 @@ class Queen(RandomWalker):
     """Queen Walker, can walk in each direction, using fixed step length of 20"""
     def __init__(self, *args):
         super().__init__(*args)
-        self.walkDirections = [WalkDirection.DownLeft, WalkDirection.UpLeft,
-                               WalkDirection.DownRight, WalkDirection.UpRight,
-                               WalkDirection.Up, WalkDirection.Down,
-                               WalkDirection.Right, WalkDirection.Left]
+        self.walk_directions = [WalkDirection.DOWNLEFT, WalkDirection.UPLEFT,
+                                WalkDirection.DOWNRIGHT, WalkDirection.UPRIGHT,
+                                WalkDirection.UP, WalkDirection.DOWN,
+                                WalkDirection.RIGHT, WalkDirection.LEFT]
         self.step_length = 20
 
 
@@ -213,9 +233,9 @@ class Pawn(RandomWalker):
     def __init__(self, *args):
         super().__init__(*args)
         if random.randint(0, 1) == 0:
-            self.walkDirections = [WalkDirection.Up, WalkDirection.UpLeft,
-                                   WalkDirection.UpRight]
+            self.walk_directions = [WalkDirection.UP, WalkDirection.UPLEFT,
+                                    WalkDirection.UPRIGHT]
         else:
-            self.walkDirections = [WalkDirection.Down, WalkDirection.DownLeft,
-                                   WalkDirection.DownRight]
+            self.walk_directions = [WalkDirection.DOWN, WalkDirection.DOWNLEFT,
+                                    WalkDirection.DOWNRIGHT]
         self.step_length = 1
