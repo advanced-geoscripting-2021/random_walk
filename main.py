@@ -5,7 +5,6 @@
 # Python code for 2D random walk.
 # Source: https://www.geeksforgeeks.org/random-walk-implementation-python/
 import matplotlib.pyplot as plt
-from matplotlib import cm
 import random
 import numpy as np
 import math
@@ -18,7 +17,7 @@ _total_steps_option = [
         "-ts",
         default=10000,
         type=int,
-        help="Specify the number of total steps for the random walker, Default is 10,000",
+        help="Specify the number of total steps for each random walker, Default is 10,000, Minimum 10",
     )
 ]
 
@@ -28,7 +27,7 @@ _total_walkers_option = [
         "-tw",
         default=1,
         type=int,
-        help="Specify the number of total walkers, Default is 1",
+        help="Specify the number of total walkers, Default is 1, Minimum is 1",
     )
 ]
 
@@ -97,15 +96,24 @@ def run(
     run_random_walkers(total_steps, total_walkers, step_size, landscape, start_point)
 
 
-# def user_input():
-#    try:
-#        walkers = int(sys.argv[1])
-#        steps = int(sys.argv[2])
-#        dif_start = bool(int(sys.argv[3]))
-#    except Exception as err:
-#        print("Incorrect input: ", err)
-#        sys.exit()
-#    return walkers, steps, dif_start
+def next_step(x, y, pos, direction, step_size):
+    # go east
+    if direction == "EAST":
+        x[pos] = x[pos - 1] + step_size
+        y[pos] = y[pos - 1]
+    # go west
+    elif direction == "WEST":
+        x[pos] = x[pos - 1] - step_size
+        y[pos] = y[pos - 1]
+    # go north
+    elif direction == "NORTH":
+        x[pos] = x[pos - 1]
+        y[pos] = y[pos - 1] + step_size
+    # go south
+    else:
+        x[pos] = x[pos - 1]
+        y[pos] = y[pos - 1] - step_size
+    return x, y
 
 
 def walker(x, y, total_steps, diff_start, step_size=1, direction_set=("NORTH", "SOUTH", "EAST", "WEST")):
@@ -125,23 +133,7 @@ def walker(x, y, total_steps, diff_start, step_size=1, direction_set=("NORTH", "
         y[0] = random.randint(-total_steps / 100, total_steps / 100)
     for pos in range(1, total_steps):
         direction = random.choice(direction_set)
-
-        # go east
-        if direction == "EAST":
-            x[pos] = x[pos - 1] + step_size
-            y[pos] = y[pos - 1]
-        # go west
-        elif direction == "WEST":
-            x[pos] = x[pos - 1] - step_size
-            y[pos] = y[pos - 1]
-        # go north
-        elif direction == "NORTH":
-            x[pos] = x[pos - 1]
-            y[pos] = y[pos - 1] + step_size
-        # go south
-        else:
-            x[pos] = x[pos - 1]
-            y[pos] = y[pos - 1] - step_size
+        x, y = next_step(x, y, pos, direction, step_size)
     return x, y
 
 
@@ -319,6 +311,13 @@ def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_st
     :param diff_start: boolean, if True, different start points for each walker
     :return:
     """
+
+    # adjust wrong input
+    if total_steps < 10:
+        total_steps = 10
+    if total_walkers < 1:
+        total_walkers = 1
+
     # diverted because of the completely different implementation methods -> could be done better in the future
     if landscape:
         fill_percentage = 0.1
