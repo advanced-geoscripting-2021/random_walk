@@ -1,10 +1,5 @@
 # Random Walk Simulation
 
-This is a **group exercise**, so you should be working in pairs of two students. It's **30% of your final grade**. 
-
-The Goal is to **practise writing readable, maintainable and reliable code collaboratively.**
-
-
 ## Write an extended random walk program 
 
 In this repo you find a basic implementation of a [random walk simulation](https://en.wikipedia.org/wiki/Random_walk) in 2-dimensional space taken from [this blogpost](https://www.geeksforgeeks.org/random-walk-implementation-python/). Running the code yields an image which shows the path of the random walk. 
@@ -50,11 +45,11 @@ Usage: random_walker run [OPTIONS]
   execute command to generate random walkers
 
 Options:
-  -ts, --total_steps INTEGER    Specify the number of total steps for the
-                                random walker, Default is 10,000
+  -ts, --total_steps INTEGER    Specify the number of total steps for each
+                                random walker, Default is 10,000, Minimum 100
 
   -tw, --total_walkers INTEGER  Specify the number of total walkers, Default
-                                is 1
+                                is 1, Minimum is 1
 
   -ss, --step_size INTEGER      Specify the size of the steps taken, Default
                                 is 1
@@ -64,6 +59,9 @@ Options:
 
   -sp, --start_point BOOLEAN    Specify whether the walkers shall start from
                                 the same point or not, Default is False
+
+  -mp, --mov_pattern BOOLEAN    Specify the neighborhood movement pattern,
+                                False is Neumann, True is Moor
 
   --help                        Show this message and exit.
 

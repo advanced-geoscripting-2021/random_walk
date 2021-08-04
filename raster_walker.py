@@ -142,4 +142,5 @@ def plot_raster(arr, total_steps):
                facecolor="white")
 
     axs.set_axis_off()
+    plt.savefig(".\\rand_walk_raster_{}.png".format(total_steps))
     plt.show()
