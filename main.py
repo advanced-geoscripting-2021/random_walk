@@ -17,7 +17,8 @@ _total_steps_option = [
         "-ts",
         default=10000,
         type=int,
-        help="Specify the number of total steps for each random walker, Default is 10,000, Minimum 100",
+        help="Specify the number of total steps for each random walker,"
+             "Default is 10,000, Minimum 100",
     )
 ]
 
@@ -86,7 +87,8 @@ def add_options(options):
 @click.option('--verbose', '-v', is_flag=False, help="Will print verbose messages.")
 def cli(verbose: bool) -> None:
     if verbose:
-        click.echo("We are in the verbose mode. Which does not make any difference right now.. but hey, have fun!")
+        click.echo("We are in the verbose mode. Which does not make any"
+                   "difference right now.. but hey, have fun!")
 
 
 @cli.command()
@@ -102,9 +104,10 @@ def run(
         step_size: int,
         landscape: bool,
         start_point: bool,
+        mov_pattern: bool
 ) -> None:
     """ execute command to generate random walkers """
-    run_random_walkers(total_steps, total_walkers, step_size, landscape, start_point)
+    run_random_walkers(total_steps, total_walkers, step_size, landscape, start_point, mov_pattern)
 
 
 def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_start, mov_pattern):
@@ -119,13 +122,12 @@ def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_st
     :return:
     """
 
-    # adjust wrong input, quick but powerful!;)
-    if total_steps < 100:
-        total_steps = 100
-    if total_walkers < 1:
-        total_walkers = 1
+    # adjust wrong input
+    total_steps = max(total_steps, 100)
+    total_walkers = max(total_walkers, 1)
 
-    # diverted because of the completely different implementation methods -> could be done better in the future
+    # diverted because of the completely different implementation methods ->
+    # could be done better in the future
     if landscape:
         # percentage of how much space obstacles shall block
         fill_percentage = 0.1
@@ -136,13 +138,13 @@ def run_random_walkers(total_steps, total_walkers, step_size, landscape, diff_st
     else:
         # creating two arrays for containing x and y coordinate
         # of size equals to the number of size and filled up with 0's
-        x, y = vw.create_walking_space(total_steps)
+        x_arr, y_arr = vw.create_walking_space(total_steps)
 
         # multiple walkers
-        list_x, list_y = vw.multiple_v_walkers(x, y, total_steps, total_walkers, step_size, diff_start, mov_pattern)
-        print(list_x)
+        list_x, list_y = vw.multiple_v_walkers(x_arr, y_arr, total_steps, total_walkers,
+                                               step_size, diff_start, mov_pattern)
         vw.plot_v_walkers(total_steps, total_walkers, list_x, list_y)
 
 
 if __name__ == "__main__":
-    run_random_walkers(10, 5, 1, True, True, True)
+    run_random_walkers(100, 5, 1, True, True, True)
