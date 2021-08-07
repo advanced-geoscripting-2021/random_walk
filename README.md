@@ -17,7 +17,7 @@ For the execution of main.py you can set the following flags (if no flags are se
 - -w : number of walkers
 
 - -ls: adjust landscale playground scale
-- -ps : set playground/map generation seed
+- -ps : set playground/map generation seed (-> currently only one other playground available (seed=1) containing a hole, representing a lake)
 - -s : number of steps per walkers
 
 - --save : save figure
