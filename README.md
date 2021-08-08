@@ -23,9 +23,10 @@ For the execution of main.py you can set the following flags (if no flags are se
 
 
 ## Examples Configurations
+![readmefigures/king.png](readmefigures/king.png)
 
 Simulate three Kings:  
-- python main.py -w 3 -n King![img.png](img.png)
+- python main.py -w 3 -n King
 
 Simulate four walkers, choose from Queen and Pawn: 
 - python main.py -w 4 -n Queen Pawn
