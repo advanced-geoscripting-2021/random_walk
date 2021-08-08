@@ -13,14 +13,14 @@ Organized in 2 Modules:
 
 When running our Random-Walker-Application, a number of randomly chosen walkers will walk a set number of steps following their spefific rules. The resulting paths are drawn and returned as a plot.
 For the execution of main.py you can set the following flags (if no flags are set during execution, default parameters are set for a number of 2 walkers on the default playground with scaling factor 4 -> playground size: 1000 x 1000):
-- -h : help
-- -w : number of walkers
-- -n : space separated list of of walker names to choose from {Rook,King,Bishop,Queen,Pawn}
-- -ls: adjust landscale playground scale
-- -ps : set playground/map generation seed (-> currently only one other playground available (seed=1) containing a hole, representing a lake)
-- -s : number of steps per walkers
+- -h : show help message and how to use it
+- -w : number of walkers {1...Inf}
+- -n : space separated list of walker names to choose from {Rook,King,Bishop,Queen,Pawn}
+- -ls: set playground scale factor {1...Inf}
+- -ps : set playground/map generation seed (-> currently only one other playground available (seed=1) containing a hole, representing a lake) {0,1,2}
+- -s : number of steps per walkers {1...Inf}
+- --save : save the simulation to a file
 
-- --save : save figure
 
 ## Examples Configurations
 
