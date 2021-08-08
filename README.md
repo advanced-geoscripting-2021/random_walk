@@ -15,9 +15,23 @@ When running our Random-Walker-Application, a number of randomly chosen walkers 
 For the execution of main.py you can set the following flags (if no flags are set during execution, default parameters are set for a number of 2 walkers on the default playground with scaling factor 4 -> playground size: 1000 x 1000):
 - -h : help
 - -w : number of walkers
-
+- -n : space separated list of of walker names to choose from {Rook,King,Bishop,Queen,Pawn}
 - -ls: adjust landscale playground scale
 - -ps : set playground/map generation seed (-> currently only one other playground available (seed=1) containing a hole, representing a lake)
 - -s : number of steps per walkers
 
 - --save : save figure
+
+## Examples Configurations
+
+Simulate three Kings:  
+- python main.py -w 3 -n King.
+
+Simulate four walkers, choose from Queen and Pawn: 
+- python main.py -w 4 -n Queen Pawn
+
+Simulate two random walkers for 10 steps:
+- python main.py -w 2 -s 10
+
+Simulate two random walkers on a map without obstacles:
+- python main.py -w -ps 0
