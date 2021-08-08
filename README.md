@@ -17,7 +17,7 @@ For the execution of main.py you can set the following flags (if no flags are se
 - -w : number of walkers {1...Inf}
 - -n : space separated list of walker names to choose from {Rook,King,Bishop,Queen,Pawn}
 - -ls: set playground scale factor {1...Inf}
-- -ps : set playground/map generation seed (-> currently only one other playground available (seed=1) containing a hole, representing a lake) {0,1,2}
+- -ps : set playground/map generation seed (-> currently only one other playground available (seed=1) containing a hole, representing a lake) {0,1}
 - -s : number of steps per walkers {1...Inf}
 - --save : save the simulation to a file
 
