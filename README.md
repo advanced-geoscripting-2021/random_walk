@@ -25,7 +25,7 @@ For the execution of main.py you can set the following flags (if no flags are se
 ## Examples Configurations
 
 Simulate three Kings:  
-- python main.py -w 3 -n King.
+- python main.py -w 3 -n King![img.png](img.png)
 
 Simulate four walkers, choose from Queen and Pawn: 
 - python main.py -w 4 -n Queen Pawn
@@ -33,5 +33,5 @@ Simulate four walkers, choose from Queen and Pawn:
 Simulate two random walkers for 10 steps:
 - python main.py -w 2 -s 10
 
-Simulate two random walkers on a map without obstacles:
-- python main.py -w -ps 0
+Simulate two random walkers on a map with obstacles:
+- python main.py -w 2 -ps 1
