@@ -39,6 +39,7 @@ class Playground:
                 (x_max / 2.5, y_max / 2.5)
             ]
             holes.append(moon_lake)
+        ''' In Development:
         elif seed == 2:
             outer_lake_border = [
                 (0, y_max/10),
@@ -64,6 +65,7 @@ class Playground:
             ]
             holes.append(outer_lake_border)
             holes.append(inner_lake_border)
+        '''
         self.holes = holes
         self.shape = Polygon(border_polygon, holes)
 

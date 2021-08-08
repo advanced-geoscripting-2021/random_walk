@@ -53,7 +53,7 @@ if __name__ == '__main__':
                         help='space separated list of names of walker types to choose randomly')
     parser.add_argument('-ls', '--landscale', type=int, default=4, help='playground scale')
     parser.add_argument('-ps', '--playgroundseed', type=int, default=0,
-                        choices=[0, 1, 2], help='map generation seed')
+                        choices=[0, 1], help='map generation seed')
     parser.add_argument('-s', '--steps', type=int, default=100, help='number of steps per walker')
     parser.add_argument('--save', action="store_true", help='save figure')
     args = parser.parse_args()
