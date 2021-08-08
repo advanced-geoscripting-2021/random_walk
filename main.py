@@ -36,11 +36,11 @@ def main(steps: int, walkers: int, save: bool, map_seed: int, land_scale: int,
         plt.plot(walker.x_positions,
                  walker.y_positions,
                  label=str(type(walker).__name__) + ' index: ' + str(walker_index))
+    # show legend and plot
+    plt.legend()
     # optional save the plot
     if save:
         plt.savefig("./rand_walk_{}.png".format(steps))
-    # show legend and plot
-    plt.legend()
     plt.show()
 
 
