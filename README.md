@@ -1,55 +1,52 @@
-# Random Walk Simulation
+# A Random Walk Simulation:
 
-This is a **group exercise**, so you should be working in pairs of two students. It's **30% of your final grade**. 
+In this repository you can find a basic implementation of a random walk simulation in a 
+2-dimensional space. The scenario is always the same: Our walker is bored with being 
+inside, he rather goes for a stroll outside. So, the walker leaves the house and starts 
+walking, without any destination in mind… and refuses to go back inside! 
 
-The Goal is to **practise writing readable, maintainable and reliable code collaboratively.**
-
-## Group Exercise
-
-1. One student of your group forks the code from [https://github.com/advanced-geoscripting-2021/random_walker.git](https://github.com/advanced-geoscripting-2021/random_walker.git)
-
-2. This student invites the other student as a collaborator to the forked repository. Now you can both work on the code.
-
-3. Adapt the code to fulfil the requirements (see below).
-
-4. Code review: Each group reviews the code of another group. 
-
-5. Improve your code based on the review you got. 
+You can specify for how long the walker should walk and at what pace. You’ll get 
+a map of the route the walker took returned! But be aware: if you let the walker walk to
+far, he might rather take a plane...
 
 
-## Write an extended random walk program 
+## How to use the Script
+In order to use the script, you have to clone this repository to your drive and the 
+following libraries need to be installed your python environment:
+### Dependencies
+For running:
+- Python 3.7.10
+- NumPy 1.20.3
+- Matplotlib 3.3.4
 
-In this repo you find a basic implementation of a [random walk simulation](https://en.wikipedia.org/wiki/Random_walk) in 2-dimensional space taken from [this blogpost](https://www.geeksforgeeks.org/random-walk-implementation-python/). Running the code yields an image which shows the path of the random walk. 
+For testing if the script is executed correctly:
+- pytest 6.2.4
 
-![random_walk](rand_walk_100000.png)
+### Usage
+To use the script, you need to navigate to the cloned repository on your machine from 
+the command line. If you're in your directory and the correct python environment is 
+activated, you can run the script. Therefore, you state the command `python walker.py ` 
+followed by your settings. You have to specify the following settings:
+````
+1. The walking time
+2. The number of walker who are walking at usual speed
+3. The number of walker who are walking fast
+4. The number of walker who are running
+5. The path the outfile should be saved at
+````
 
-The program works but it is not very readable. In addition, you should **extend the program based on the requirements listed below.
+However, note that all settings have to be defined, so if you want to have a single 
+walker, just define all the others as 0. Furthermore, a maximum of 12 walker overall are
+allowed. 
 
-**Remember to apply the best practices in scientific computing** to make the code more readable, maintainable, reusable and efficient.  
+As an example, you would need to state the following command to get the walking maps of 
+two walker at usual speed, one fast-walking walker and a running walker if you let them 
+walk over a time of 1000:
 
-### Minimum requirements: 
+`python walker.py 1000 2 1 1 ./TheRoutesOfMyWalker.png`
 
-Extend the program so the following requirements are met:
+The resulting image of the maps would look similar to the one below:
 
-1. The program should be able to simulate multiple random walkers. 
-2. The program should be executable from the command line. 
-3. The user should be able to specify the number of random walkers through a command line parameter. 
-4. Document the dependencies and instructions of how to run the program in your README.md.
+![image](https://github.com/hn437/random_walk/blob/main/TheRoutesOfMyWalker.png)
 
-### Additional requirements: 
-
-1. Create three different types of walkers, e.g. a "fast walker" which has a bigger step size. 
-2. Add a "landscape" in which the random walkers are walking in which contains obstacles which the walkers cannot cross (e.g. a lake)
-3. Invent and implement another functionality of your own.
-
-Be creative here! :) 
-
-## Code Review 
-
-Review the code of another group: (tuesday afternoon or wednesday morning)
-
-1. Does it work properly? Try to make it fail!
-2. Are the best-practices implemented in the code?
-3. Is the documentation clear? 
-4. Can you adapt the code easily? E.g. try to create a new type of random walker which moves two cells per iteration.  
-
+### And now: let them walk!
